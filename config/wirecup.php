@@ -9,7 +9,7 @@ return [
 
     'middleware' => ['web'],
 
-    'root' => resource_path('wirecup'),
+    'root' => base_path('.agents/.cup'),
 
     'default_file' => env('WIRECUP_DEFAULT_FILE'),
 ];

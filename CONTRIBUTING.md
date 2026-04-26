@@ -15,7 +15,7 @@ For manual package development, use a normal Laravel app with a local path repos
 composer require ruibeard/laravel-wirecup:@dev
 ```
 
-Then create `resources/wirecup/*.cup` files in that app and open `/wirecup`.
+Then create `.agents/.cup/*.cup` files in that app and open `/wirecup`.
 
 ## Guidelines
 

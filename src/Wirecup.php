@@ -82,7 +82,7 @@ class Wirecup
 
     public function root(): string
     {
-        return (string) config('wirecup.root', resource_path('wirecup'));
+        return (string) config('wirecup.root', base_path('.agents/.cup'));
     }
 
     protected function exists(string $relativePath): bool
