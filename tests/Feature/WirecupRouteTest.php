@@ -2,10 +2,30 @@
 
 namespace Ruibeard\LaravelWirecup\Tests\Feature;
 
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Ruibeard\LaravelWirecup\Tests\TestCase;
 
 class WirecupRouteTest extends TestCase
 {
+    public function test_it_auto_installs_the_skill_files(): void
+    {
+        $basePath = sys_get_temp_dir().'/laravel-wirecup-auto-'.bin2hex(random_bytes(8));
+
+        File::ensureDirectoryExists($basePath);
+        $this->app->setBasePath($basePath);
+
+        try {
+            $provider = $this->app->getProvider(\Ruibeard\LaravelWirecup\WirecupServiceProvider::class);
+            $provider->installAgentFiles();
+
+            $this->assertFileExists($basePath.'/.agents/skills/wirecup/SKILL.md');
+            $this->assertFileExists($basePath.'/.agents/.cup/.gitkeep');
+        } finally {
+            File::deleteDirectory($basePath);
+        }
+    }
+
     public function test_it_lists_wirecup_files(): void
     {
         $this
@@ -58,6 +78,23 @@ CUP);
             } elseif (is_file($dashboardPath)) {
                 unlink($dashboardPath);
             }
+        }
+    }
+
+    public function test_it_installs_the_skill_and_mock_directory(): void
+    {
+        $basePath = sys_get_temp_dir().'/laravel-wirecup-test-'.bin2hex(random_bytes(8));
+
+        File::ensureDirectoryExists($basePath);
+        $this->app->setBasePath($basePath);
+
+        try {
+            Artisan::call('wirecup:install');
+
+            $this->assertFileExists($basePath.'/.agents/skills/wirecup/SKILL.md');
+            $this->assertFileExists($basePath.'/.agents/.cup/.gitkeep');
+        } finally {
+            File::deleteDirectory($basePath);
         }
     }
 }

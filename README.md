@@ -1,20 +1,24 @@
 # Laravel Wirecup
 
-Install this package, ask your LLM to generate Wirecup mockups using the canonical Wirecup skill at:
-
-`https://github.com/ruibeard/wirecup/blob/main/.agents/skills/wirecup/SKILL.md`
-
-Then open:
-
-`http://yourproject.test/wirecup`
-
-The package will render the generated `.cup` files from `.agents/.cup` inside your Laravel app.
+Install the package, publish the Wirecup skill, then open `/wirecup` to preview `.agents/.cup/*.cup` mockups inside your Laravel app.
 
 ## Install
 
 ```bash
 composer require ruibeard/laravel-wirecup
+php artisan wirecup:install
 ```
+
+This publishes:
+
+- `.agents/skills/wirecup/SKILL.md`
+- `.agents/.cup/.gitkeep`
+
+Then ask your LLM to use the local Wirecup skill at `.agents/skills/wirecup/SKILL.md` and write mockups into `.agents/.cup`.
+
+Open:
+
+`http://yourproject.test/wirecup`
 
 ## Config
 

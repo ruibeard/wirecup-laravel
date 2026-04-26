@@ -7,7 +7,8 @@ All notable changes to `laravel-wirecup` will be documented in this file.
 - Sync Laravel package behavior with the current Wirecup spec
 - Treat badge and alert elements as neutral sketch elements
 - Support route-style link targets like `settings`, `/dashboard`, and `product.cup`
-- Remove in-repo Workbench scaffolding and simplify package development flow
+- Remove in-repo test app scaffolding and simplify package development flow
+- Add `wirecup:install` to publish the Wirecup skill and create `.agents/.cup`
 
 ## 0.1.0
 
