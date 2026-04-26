@@ -65,11 +65,5 @@ class WirecupServiceProvider extends PackageServiceProvider
         $this->publishes([
             $this->skillSourcePath() => base_path('.agents/skills/wirecup/SKILL.md'),
         ], 'wirecup-skill');
-
-        if (! $this->app->runningInConsole() || $this->app->runningUnitTests()) {
-            return;
-        }
-
-        $this->installAgentFiles();
     }
 }
