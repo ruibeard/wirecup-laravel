@@ -19,10 +19,7 @@ class WirecupServiceProvider extends PackageServiceProvider
         $skillPath = base_path('.agents/skills/wirecup/SKILL.md');
 
         File::ensureDirectoryExists(dirname($skillPath));
-
-        if (! File::exists($skillPath)) {
-            File::copy($this->skillSourcePath(), $skillPath);
-        }
+        File::copy($this->skillSourcePath(), $skillPath);
 
         File::ensureDirectoryExists(base_path('.agents/.cup'));
 
