@@ -1,3 +1,8 @@
+---
+name: wirecup
+description: A tiny DSL for low-fidelity UI mockups
+---
+
 # Skill: wirecup
 
 Wirecup is a tiny DSL for low-fidelity UI mockups.
