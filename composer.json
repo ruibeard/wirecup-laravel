@@ -1,0 +1,56 @@
+{
+    "name": "ruibeard/laravel-wirecup",
+    "description": "Laravel package for browsing and rendering Wirecup .cup files at /wirecup.",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/ruibeard/laravel-wirecup",
+    "keywords": [
+        "laravel",
+        "wirecup",
+        "wireframes"
+    ],
+    "authors": [
+        {
+            "name": "Rui Beard"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ruibeard/laravel-wirecup/issues",
+        "source": "https://github.com/ruibeard/laravel-wirecup"
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/filesystem": "^11.0|^12.0|^13.0",
+        "illuminate/http": "^11.0|^12.0|^13.0",
+        "illuminate/routing": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "illuminate/view": "^11.0|^12.0|^13.0",
+        "spatie/laravel-package-tools": "^1.93"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^10.5|^11.5|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ruibeard\\LaravelWirecup\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ruibeard\\LaravelWirecup\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ruibeard\\LaravelWirecup\\WirecupServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
