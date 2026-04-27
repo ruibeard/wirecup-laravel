@@ -31,12 +31,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Ruibeard\\LaravelWirecup\\": "src/"
+            "Ruibeard\\WirecupLaravel\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ruibeard\\LaravelWirecup\\Tests\\": "tests/"
+            "Ruibeard\\WirecupLaravel\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -45,7 +45,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Ruibeard\\LaravelWirecup\\WirecupServiceProvider"
+                "Ruibeard\\WirecupLaravel\\WirecupServiceProvider"
             ]
         }
     },

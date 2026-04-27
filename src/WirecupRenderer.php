@@ -138,7 +138,7 @@ tailwind.config = {
   },
 };
 </script>
-<script WirecupLaravel="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
 .sketchy-page {
     transform: rotate(-0.3deg);
