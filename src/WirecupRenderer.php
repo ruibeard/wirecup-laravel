@@ -292,6 +292,7 @@ HTML;
     protected function renderTable(string $headerLine, array $rows): string
     {
         $headers = $this->splitCells($headerLine);
+        $headerCount = count($headers);
         $headerHtml = implode('', array_map(
             fn(string $header): string => '<th class="px-3 py-2 border-2 border-stone-500 text-left bg-stone-200 font-bold">'.$this->escape($header).'</th>',
             $headers,
@@ -300,6 +301,12 @@ HTML;
 
         foreach ($rows as $index => $row) {
             $cells = $this->splitCells($row);
+
+            // Pad cells to match header count
+            while (count($cells) < $headerCount) {
+                $cells[] = '';
+            }
+
             $bg = $index % 2 === 1 ? 'bg-stone-50' : '';
             $cellHtml = [];
 
