@@ -195,7 +195,7 @@ HTML;
             [$label, $href] = $this->parseLink($item);
 
             if ($href !== '') {
-                $items[] = '<a href="'.$this->escapeAttribute($href).'" class="hover:underline text-stone-800">'.$this->escape($label).'</a>';
+                $items[] = '<a href="'.$this->escapeAttribute($href).'" target="_top" class="hover:underline text-stone-800">'.$this->escape($label).'</a>';
 
                 continue;
             }
@@ -336,17 +336,14 @@ HTML;
             return [$label, ''];
         }
 
-        if (str_starts_with($target, 'http')) {
-            $href = $target;
-        } elseif (str_starts_with($target, '/')) {
-            $href = $target;
-        } elseif (str_ends_with($target, '.cup')) {
-            $href = '/'.trim(substr($target, 0, -4), '/');
-        } else {
-            $href = '/'.trim($target, '/');
+        if (str_starts_with($target, 'http') || str_starts_with($target, '/')) {
+            return [$label, $target];
         }
 
-        return [$label, $href];
+        // plain slug or slug.cup — link to the wirecup viewer
+        $slug = str_ends_with($target, '.cup') ? $target : $target.'.cup';
+
+        return [$label, '/wirecup?file='.rawurlencode($slug)];
     }
 
     /**
