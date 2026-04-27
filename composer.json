@@ -1,6 +1,7 @@
 {
     "name": "ruibeard/wirecup-laravel",
     "description": "Expose Wirecup .cup mockups inside Laravel for LLM and developer preview workflows.",
+    "version": "1.0.0",
     "type": "library",
     "license": "MIT",
     "homepage": "https://github.com/ruibeard/wirecup-laravel",
