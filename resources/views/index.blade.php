@@ -4,175 +4,52 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title }}</title>
-    <style>
-        :root {
-            color-scheme: light;
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            background: #f5f1e8;
-            color: #2f2a23;
-        }
-
-        .layout {
-            display: grid;
-            grid-template-columns: 280px minmax(0, 1fr);
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            padding: 24px;
-            border-right: 2px solid #d7cfbf;
-            background: #efe8da;
-        }
-
-        .sidebar h1 {
-            margin: 0 0 8px;
-            font-size: 1.35rem;
-        }
-
-        .sidebar p {
-            margin: 0 0 24px;
-            color: #5c5448;
-            line-height: 1.5;
-        }
-
-        .files {
-            display: grid;
-            gap: 10px;
-        }
-
-        .file-link {
-            display: block;
-            padding: 12px 14px;
-            text-decoration: none;
-            color: inherit;
-            background: #fffdf8;
-            border: 2px solid #d7cfbf;
-            border-radius: 12px;
-        }
-
-        .file-link.active {
-            border-color: #7a6850;
-            background: #fff7dd;
-        }
-
-        .file-link strong {
-            display: block;
-            font-size: 0.95rem;
-        }
-
-        .file-link span {
-            display: block;
-            margin-top: 4px;
-            font-size: 0.8rem;
-            color: #6a6257;
-        }
-
-        .preview-shell {
-            display: grid;
-            grid-template-rows: auto minmax(0, 1fr);
-            min-height: 100vh;
-        }
-
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 18px 24px;
-            border-bottom: 2px solid #d7cfbf;
-            background: rgba(255, 252, 245, 0.92);
-        }
-
-        .toolbar h2 {
-            margin: 0;
-            font-size: 1rem;
-        }
-
-        .toolbar code {
-            font-size: 0.9rem;
-            background: #f1ece0;
-            padding: 2px 6px;
-            border-radius: 6px;
-        }
-
-        .open-link {
-            color: #5c4a34;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            background: white;
-        }
-
-        .empty {
-            padding: 32px;
-        }
-
-        @media (max-width: 900px) {
-            .layout {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                border-right: 0;
-                border-bottom: 2px solid #d7cfbf;
-            }
-
-            .preview-shell {
-                min-height: 70vh;
-            }
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="layout">
-    <aside class="sidebar">
-        <h1>{{ $title }}</h1>
+<body class="m-0 bg-stone-100 text-stone-800">
+    <div class="flex h-screen">
+        <aside class="w-52 h-full overflow-y-auto border-r-2 border-stone-300 bg-stone-200 p-3 flex flex-col">
+            <h1 class="text-lg font-semibold mb-3 text-stone-700">{{ $title }}</h1>
 
-        <div class="files">
-            @forelse ($files as $file)
-                @php
-                    $href = route('wirecup.index').'?file='.rawurlencode($file);
-                @endphp
-                <a class="file-link {{ $selected === $file ? 'active' : '' }}" href="{{ $href }}">
-                    <strong>{{ basename($file, '.cup') }}</strong>
-                    <span>{{ $file }}</span>
+            <div class="space-y-1 flex-1">
+                @forelse ($files as $file)
+                    @php
+                        $href = route('wirecup.index').'?file='.rawurlencode($file);
+                        $previewHref = route('wirecup.render', ['file' => $file]);
+                        $isActive = $selected === $file;
+                    @endphp
+                    <a class="flex items-center justify-between p-2 rounded-lg border-2 no-underline text-inherit {{ $isActive ? 'border-stone-600 bg-yellow-50' : 'border-transparent bg-stone-50 hover:border-stone-300' }}" href="{{ $href }}">
+                        <span class="text-sm font-medium">{{ basename($file, '.cup') }}</span>
+                        <span class="ml-2 text-stone-500 hover:text-stone-700 shrink-0" onclick="event.preventDefault(); event.stopPropagation(); window.open('{{ $previewHref }}', '_blank');" role="button" aria-label="Open {{ $file }}">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                        </span>
+                    </a>
+                @empty
+                    <p class="text-sm text-stone-500">No .cup files found</p>
+                @endforelse
+            </div>
+
+            <div class="pt-4 border-t border-stone-300">
+                <a href="https://github.com/ruibeard/wirecup-laravel" target="_blank" rel="noopener noreferrer" class="text-xs text-stone-500 hover:text-stone-700">
+                    Rui Almeida
                 </a>
-            @empty
-                <div class="file-link">
-                    <strong>No .cup files found</strong>
-                    <span>Add files under {{ $root }}</span>
-                </div>
-            @endforelse
-        </div>
-    </aside>
+            </div>
+        </aside>
 
-    <main class="preview-shell">
-        @if ($previewUrl)
-            <div class="toolbar">
-                <h2>Previewing <code>{{ $selected }}</code></h2>
-                <a class="open-link" href="{{ $previewUrl }}" target="_blank" rel="noreferrer">Open preview</a>
-            </div>
-            <iframe src="{{ $previewUrl }}" title="Wirecup preview"></iframe>
-        @else
-            <div class="empty">
-                <h2>No previews available</h2>
-                <p>Create a <code>.cup</code> file in <code>{{ $root }}</code> and refresh this page.</p>
-            </div>
-        @endif
-    </main>
-</div>
+        <main class="flex-1 flex flex-col min-w-0">
+            @if ($previewUrl)
+                <iframe src="{{ $previewUrl }}" title="Wirecup preview" class="flex-1 w-full border-0 bg-white"></iframe>
+            @else
+                <div class="p-8">
+                    <h2 class="text-xl font-semibold">No previews available</h2>
+                    <p class="mt-2 text-stone-500">Create a <code class="text-sm bg-stone-200 px-1 rounded">.cup</code> file in <code class="text-sm bg-stone-200 px-1 rounded">{{ $root }}</code> and refresh this page.</p>
+                </div>
+            @endif
+        </main>
+    </div>
 </body>
 </html>

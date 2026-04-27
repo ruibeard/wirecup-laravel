@@ -12,7 +12,7 @@ class WirecupRenderer
     }
 
     /**
-     * @param list<string> $lines
+     * @param  list<string>  $lines
      */
     protected function renderLines(array $lines, bool $inRow = false): string
     {
@@ -86,18 +86,18 @@ class WirecupRenderer
             $flushList();
 
             $parts[] = match ($type) {
-                'n' => $this->elNav($content),
-                'h' => $this->elHeading($content),
-                't' => $this->elText($content),
-                'i' => $this->elInput($content),
-                'b' => $this->elButton($content),
-                'x' => $this->elImage($content),
-                's' => $this->elSelect($content),
-                '-' => $this->elDivider(),
-                '=' => $this->elDivider(true),
-                'v' => $this->elBadge($content),
-                'a' => $this->elAlert($content),
-                'k' => $this->elCheckbox($content),
+                'n'     => $this->elNav($content),
+                'h'     => $this->elHeading($content),
+                't'     => $this->elText($content),
+                'i'     => $this->elInput($content),
+                'b'     => $this->elButton($content),
+                'x'     => $this->elImage($content),
+                's'     => $this->elSelect($content),
+                '-'     => $this->elDivider(),
+                '='     => $this->elDivider(true),
+                'v'     => $this->elBadge($content),
+                'a'     => $this->elAlert($content),
+                'k'     => $this->elCheckbox($content),
                 default => throw new \InvalidArgumentException("Unknown Wirecup element type '{$type}'"),
             };
         }
@@ -128,6 +128,9 @@ class WirecupRenderer
     protected function pageCss(): string
     {
         return <<<'HTML'
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
   theme: {
@@ -139,7 +142,6 @@ tailwind.config = {
   },
 };
 </script>
-<script src="https://cdn.tailwindcss.com"></script>
 <style>
 .sketchy-page {
     transform: rotate(-0.3deg);
@@ -192,10 +194,17 @@ HTML;
                 continue;
             }
 
-            [$label, $href] = $this->parseLink($item);
+            [$label, $target] = $this->splitLink($item);
 
-            if ($href !== '') {
-                $items[] = '<a href="'.$this->escapeAttribute($href).'" target="_top" class="hover:underline text-stone-800">'.$this->escape($label).'</a>';
+            if ($target !== '') {
+                $slug = str_ends_with($target, '.cup') ? $target : $target.'.cup';
+                // When inside an iframe, navigate the parent to the viewer.
+                // When opened directly, stay on the render URL.
+                $viewerUrl = '/wirecup?file='.rawurlencode($slug);
+                $renderUrl = '/wirecup/render/'.rawurlencode($slug);
+                $items[] = '<a href="'.$this->escapeAttribute($renderUrl).'" '
+                    .'onclick="if(window.parent!==window){event.preventDefault();window.parent.location=\''.$this->escapeAttribute($viewerUrl).'\';}" '
+                    .'class="hover:underline text-stone-800">'.$this->escape($label).'</a>';
 
                 continue;
             }
@@ -257,10 +266,9 @@ HTML;
 
     protected function elDivider(bool $thick = false): string
     {
-        $width = $thick ? '3px' : '2px';
-        $color = $thick ? 'stone-500' : 'stone-400';
-
-        return '<hr class="my-3 border-0 border-t-['.$width.'] border-'.$color.' sketchy-divider">';
+        return $thick
+            ? '<hr class="my-3 border-0 border-t-[3px] border-stone-500 sketchy-divider">'
+            : '<hr class="my-3 border-0 border-t-[2px] border-stone-400 sketchy-divider">';
     }
 
     protected function elBadge(string $content): string
@@ -279,13 +287,13 @@ HTML;
     }
 
     /**
-     * @param list<string> $rows
+     * @param  list<string>  $rows
      */
     protected function renderTable(string $headerLine, array $rows): string
     {
         $headers = $this->splitCells($headerLine);
         $headerHtml = implode('', array_map(
-            fn (string $header): string => '<th class="px-3 py-2 border-2 border-stone-500 text-left bg-stone-200 font-bold">'.$this->escape($header).'</th>',
+            fn(string $header): string => '<th class="px-3 py-2 border-2 border-stone-500 text-left bg-stone-200 font-bold">'.$this->escape($header).'</th>',
             $headers,
         ));
         $rowsHtml = [];
@@ -312,7 +320,8 @@ HTML;
             $rowsHtml[] = '<tr>'.implode('', $cellHtml).'</tr>';
         }
 
-        return '<div class="my-2.5 overflow-x-auto"><table class="w-full border-collapse text-[0.9em]"><thead><tr>'.$headerHtml.'</tr></thead><tbody>'.implode('', $rowsHtml).'</tbody></table></div>';
+        return '<div class="my-2.5 overflow-x-auto"><table class="w-full border-collapse text-[0.9em]"><thead><tr>'.$headerHtml.'</tr></thead><tbody>'.implode('',
+                $rowsHtml).'</tbody></table></div>';
     }
 
     /**
@@ -322,7 +331,7 @@ HTML;
     {
         $parts = preg_split('/\s{2,}/', trim($line)) ?: [];
 
-        return array_values(array_filter(array_map(trim(...), $parts), static fn (string $part): bool => $part !== ''));
+        return array_values(array_filter(array_map(trim(...), $parts), static fn(string $part): bool => $part !== ''));
     }
 
     /**
@@ -351,7 +360,7 @@ HTML;
      */
     protected function splitLink(string $content): array
     {
-        if (! str_contains($content, '|')) {
+        if (!str_contains($content, '|')) {
             return [trim($content), ''];
         }
 
@@ -359,6 +368,7 @@ HTML;
 
         return [trim($label), trim($target)];
     }
+
     protected function escape(string $value): string
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
