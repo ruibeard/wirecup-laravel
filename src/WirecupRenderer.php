@@ -14,7 +14,7 @@ class WirecupRenderer
     /**
      * @param list<string> $lines
      */
-    protected function renderLines(array $lines): string
+    protected function renderLines(array $lines, bool $inRow = false): string
     {
         $parts = [];
         $listItems = [];
@@ -66,11 +66,12 @@ class WirecupRenderer
                 }
 
                 if ($type === 'c') {
-                    $parts[] = '<div class="card my-3 p-4 border-2 border-stone-500 rounded-md bg-stone-50 sketchy-card">'.$this->renderLines($childLines).'</div>';
+                    $extra = $inRow ? ' flex-1 min-w-0' : '';
+                    $parts[] = '<div class="card my-3 p-4 border-2 border-stone-500 rounded-md bg-stone-50 sketchy-card'.$extra.'">'.$this->renderLines($childLines).'</div>';
                 }
 
                 if ($type === 'r') {
-                    $parts[] = '<div class="flex gap-4 items-start flex-wrap">'.$this->renderLines($childLines).'</div>';
+                    $parts[] = '<div class="flex gap-4 items-start">'.$this->renderLines($childLines, true).'</div>';
                 }
 
                 continue;
@@ -186,7 +187,7 @@ HTML;
     {
         $items = [];
 
-        foreach (preg_split('/\s+/', trim($content)) ?: [] as $item) {
+        foreach (preg_split('/  +/', trim($content)) ?: [] as $item) {
             if ($item === '') {
                 continue;
             }
@@ -239,7 +240,7 @@ HTML;
     {
         $label = trim($content) !== '' ? trim($content) : 'img';
 
-        return '<div class="flex items-center justify-center my-1.5 min-h-20 min-w-[80px] bg-stone-200 border-2 border-stone-400 text-stone-400 text-[0.8em]" style="border-style:dashed">'.$this->escape($label).'</div>';
+        return '<div class="flex items-center justify-center my-1.5 w-full min-h-20 min-w-[80px] bg-stone-200 border-2 border-stone-400 text-stone-400 text-[0.8em]" style="border-style:dashed">'.$this->escape($label).'</div>';
     }
 
     protected function elSelect(string $content): string
