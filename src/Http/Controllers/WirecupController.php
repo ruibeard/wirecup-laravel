@@ -19,11 +19,20 @@ class WirecupController extends Controller
             $selected = $files[0] ?? null;
         }
 
+        $tokenCount = 0;
+        if ($selected) {
+            $path = $this->safePath($selected);
+            if ($path) {
+                $tokenCount = $this->renderer->countTokens(file_get_contents($path));
+            }
+        }
+
         return view('wirecup::index', [
             'title'      => config('wirecup.title', 'Wirecup'),
             'files'      => $files,
             'selected'   => $selected,
             'previewUrl' => $selected ? $this->previewUrl($selected) : null,
+            'tokenCount' => $tokenCount,
         ]);
     }
 

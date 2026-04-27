@@ -11,6 +11,54 @@ class WirecupRenderer
         return $this->pageWrap($this->renderLines($lines), $title);
     }
 
+    public function countTokens(string $contents): int
+    {
+        $binary = $this->findBundledBinary();
+
+        if ($binary !== null && is_executable($binary)) {
+            $descriptors = [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
+            $process = proc_open(escapeshellcmd($binary), $descriptors, $pipes);
+
+            if (is_resource($process)) {
+                fwrite($pipes[0], $contents);
+                fclose($pipes[0]);
+                $result = stream_get_contents($pipes[1]);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                proc_close($process);
+
+                if ($result !== false && ctype_digit(trim($result))) {
+                    return (int) trim($result);
+                }
+            }
+        }
+
+        // Fallback: approximate GPT token count.
+        return (int) ceil(mb_strlen($contents) / 4);
+    }
+
+    private function findBundledBinary(): ?string
+    {
+        $binDir = dirname(__DIR__) . '/bin';
+        $arch = php_uname('m');
+        $os = strtolower(php_uname('s'));
+
+        $map = [
+            'darwin' => ['arm64' => 'tokencount-darwin-arm64', 'x86_64' => 'tokencount-darwin-x64'],
+            'linux'  => ['arm64' => 'tokencount-linux-arm64', 'x86_64' => 'tokencount-linux-x64'],
+        ];
+
+        $osKey = str_contains($os, 'darwin') ? 'darwin' : (str_contains($os, 'linux') ? 'linux' : null);
+
+        if ($osKey === null || ! isset($map[$osKey][$arch])) {
+            return null;
+        }
+
+        $binary = $binDir . '/' . $map[$osKey][$arch];
+
+        return is_executable($binary) ? $binary : null;
+    }
+
     /**
      * @param  list<string>  $lines
      */
