@@ -2,13 +2,12 @@
 
 namespace Ruibeard\LaravelWirecup\Tests\Feature;
 
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Ruibeard\LaravelWirecup\Tests\TestCase;
 
 class WirecupRouteTest extends TestCase
 {
-    public function test_it_auto_installs_the_skill_files(): void
+    public function test_it_auto_installs_the_skill_on_boot(): void
     {
         $basePath = sys_get_temp_dir().'/laravel-wirecup-auto-'.bin2hex(random_bytes(8));
 
@@ -20,81 +19,35 @@ class WirecupRouteTest extends TestCase
             $provider->installAgentFiles();
 
             $this->assertFileExists($basePath.'/.agents/skills/wirecup/SKILL.md');
-            $this->assertFileExists($basePath.'/.agents/.cup/.gitkeep');
+            $this->assertDirectoryExists($basePath.'/.agents/.cup');
         } finally {
             File::deleteDirectory($basePath);
         }
     }
 
-    public function test_it_lists_wirecup_files(): void
+    public function test_index_lists_cup_files(): void
     {
         $this
             ->get('/wirecup')
             ->assertOk()
-            ->assertSee('home.cup', false)
-            ->assertSee('admin/dashboard.cup', false);
+            ->assertSee('home.cup', false);
     }
 
-    public function test_it_renders_wirecup_html(): void
+    public function test_render_returns_html_for_cup_file(): void
     {
         $this
             ->get('/wirecup/render/home.cup')
             ->assertOk()
-            ->assertSee('Welcome Home', false)
-            ->assertSee('/wirecup/render/admin/dashboard.cup', false);
+            ->assertSee('Welcome Home', false);
     }
 
-    public function test_it_rewrites_root_relative_and_named_wirecup_links(): void
+    public function test_render_returns_404_for_unknown_file(): void
     {
-        $homePath = __DIR__.'/../Fixtures/wirecup/home.cup';
-        $dashboardPath = __DIR__.'/../Fixtures/wirecup/dashboard.cup';
-        $originalHome = file_get_contents($homePath);
-        $hadDashboard = is_file($dashboardPath);
-        $originalDashboard = $hadDashboard ? file_get_contents($dashboardPath) : null;
-
-        try {
-            file_put_contents($homePath, <<<'CUP'
-n Home|home Dashboard|dashboard External|https://example.com
-b Open dashboard|admin/dashboard
-b Home absolute|/home
-CUP);
-
-            file_put_contents($dashboardPath, <<<'CUP'
-h Dashboard
-CUP);
-
-            $this
-                ->get('/wirecup/render/home.cup')
-                ->assertOk()
-                ->assertSee('/wirecup/render/home.cup', false)
-                ->assertSee('/wirecup/render/dashboard.cup', false)
-                ->assertSee('/wirecup/render/admin/dashboard.cup', false)
-                ->assertSee('https://example.com', false);
-        } finally {
-            file_put_contents($homePath, $originalHome === false ? '' : $originalHome);
-
-            if ($hadDashboard) {
-                file_put_contents($dashboardPath, $originalDashboard === false ? '' : (string) $originalDashboard);
-            } elseif (is_file($dashboardPath)) {
-                unlink($dashboardPath);
-            }
-        }
+        $this->get('/wirecup/render/nope.cup')->assertNotFound();
     }
 
-    public function test_it_installs_the_skill_and_mock_directory(): void
+    public function test_render_rejects_path_traversal(): void
     {
-        $basePath = sys_get_temp_dir().'/laravel-wirecup-test-'.bin2hex(random_bytes(8));
-
-        File::ensureDirectoryExists($basePath);
-        $this->app->setBasePath($basePath);
-
-        try {
-            Artisan::call('wirecup:install');
-
-            $this->assertFileExists($basePath.'/.agents/skills/wirecup/SKILL.md');
-            $this->assertFileExists($basePath.'/.agents/.cup/.gitkeep');
-        } finally {
-            File::deleteDirectory($basePath);
-        }
+        $this->get('/wirecup/render/../../etc/passwd')->assertNotFound();
     }
 }

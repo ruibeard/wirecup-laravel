@@ -140,7 +140,6 @@
 <div class="layout">
     <aside class="sidebar">
         <h1>{{ $title }}</h1>
-        <p>Browsing <code>{{ $root }}</code></p>
 
         <div class="files">
             @forelse ($files as $file)

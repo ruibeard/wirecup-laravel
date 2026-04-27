@@ -8,11 +8,8 @@ if (! config('wirecup.enabled', true)) {
 }
 
 Route::middleware(config('wirecup.middleware', ['web']))
-    ->prefix(trim((string) config('wirecup.uri', 'wirecup'), '/'))
-    ->name('wirecup.')
-    ->group(function (): void {
-        Route::get('/', [WirecupController::class, 'index'])->name('index');
-        Route::get('/render/{path?}', [WirecupController::class, 'render'])
-            ->where('path', '.*')
-            ->name('preview');
+    ->prefix(trim(config('wirecup.uri', 'wirecup'), '/'))
+    ->group(function () {
+        Route::get('/', [WirecupController::class, 'index'])->name('wirecup.index');
+        Route::get('/render/{file}', [WirecupController::class, 'render'])->name('wirecup.render');
     });
