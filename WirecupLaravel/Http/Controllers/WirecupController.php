@@ -1,10 +1,10 @@
 <?php
 
-namespace Ruibeard\LaravelWirecup\Http\Controllers;
+namespace Ruibeard\WirecupLaravel\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Ruibeard\LaravelWirecup\WirecupRenderer;
+use Ruibeard\WirecupLaravel\WirecupRenderer;
 
 class WirecupController extends Controller
 {

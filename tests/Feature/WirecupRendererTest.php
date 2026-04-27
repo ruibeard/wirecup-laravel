@@ -1,8 +1,8 @@
 <?php
 
-namespace Ruibeard\LaravelWirecup\Tests\Feature;
+namespace Ruibeard\WirecupLaravel\Tests\Feature;
 
-use Ruibeard\LaravelWirecup\Tests\TestCase;
+use Ruibeard\WirecupLaravel\Tests\TestCase;
 
 class WirecupRendererTest extends TestCase
 {

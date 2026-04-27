@@ -1,6 +1,6 @@
 <?php
 
-namespace Ruibeard\LaravelWirecup;
+namespace Ruibeard\WirecupLaravel;
 
 class WirecupRenderer
 {
@@ -138,7 +138,7 @@ tailwind.config = {
   },
 };
 </script>
-<script src="https://cdn.tailwindcss.com"></script>
+<script WirecupLaravel="https://cdn.tailwindcss.com"></script>
 <style>
 .sketchy-page {
     transform: rotate(-0.3deg);

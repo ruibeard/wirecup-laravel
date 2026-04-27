@@ -1,10 +1,10 @@
 <?php
 
-namespace Ruibeard\LaravelWirecup\Tests;
+namespace Ruibeard\WirecupLaravel\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
-use Ruibeard\LaravelWirecup\WirecupRenderer;
-use Ruibeard\LaravelWirecup\WirecupServiceProvider;
+use Ruibeard\WirecupLaravel\WirecupRenderer;
+use Ruibeard\WirecupLaravel\WirecupServiceProvider;
 
 abstract class TestCase extends Orchestra
 {

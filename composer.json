@@ -1,9 +1,9 @@
 {
-    "name": "ruibeard/laravel-wirecup",
+    "name": "ruibeard/wirecup-laravel",
     "description": "Expose Wirecup .cup mockups inside Laravel for LLM and developer preview workflows.",
     "type": "library",
     "license": "MIT",
-    "homepage": "https://github.com/ruibeard/laravel-wirecup",
+    "homepage": "https://github.com/ruibeard/wirecup-laravel",
     "keywords": [
         "laravel",
         "wirecup",
@@ -11,12 +11,12 @@
     ],
     "authors": [
         {
-            "name": "Rui Beard"
+            "name": "Rui Almeida"
         }
     ],
     "support": {
-        "issues": "https://github.com/ruibeard/laravel-wirecup/issues",
-        "source": "https://github.com/ruibeard/laravel-wirecup"
+        "issues": "https://github.com/ruibeard/wirecup-laravel/issues",
+        "source": "https://github.com/ruibeard/wirecup-laravel"
     },
     "require": {
         "php": "^8.2",

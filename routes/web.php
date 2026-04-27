@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Ruibeard\LaravelWirecup\Http\Controllers\WirecupController;
+use Ruibeard\WirecupLaravel\Http\Controllers\WirecupController;
 
 if (! config('wirecup.enabled', true)) {
     return;
