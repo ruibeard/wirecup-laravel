@@ -20,7 +20,10 @@
                 @endphp
                 <a class="flex items-center justify-between p-2 rounded-lg border-2 no-underline text-inherit {{ $isActive ? 'border-stone-600 bg-yellow-50' : 'border-transparent bg-stone-50 hover:border-stone-300' }}"
                    href="{{ $href }}">
-                    <span class="text-sm font-medium">{{ basename($file, '.cup') }}</span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-sm font-medium truncate">{{ basename($file, '.cup') }}</span>
+                        <span class="text-[10px] text-stone-400">{{ $tokenCounts[$file] ?? 0 }} tokens</span>
+                    </div>
                     <span class="ml-2 text-stone-500 hover:text-stone-700 shrink-0"
                           onclick="event.preventDefault(); event.stopPropagation(); window.open('{{ $previewHref }}', '_blank');" role="button" aria-label="Open {{ $file }}">
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -44,7 +47,7 @@
 
     <main class="flex-1 flex flex-col relative min-w-0">
         @if ($previewUrl)
-            <span class="absolute top-4 left-4 z-10 text-xs text-stone-500 bg-stone-100 px-2 py-1 rounded">{{ $tokenCount }} tokens</span>
+            <span class="absolute top-4 left-4 z-10 text-xs text-stone-500 bg-stone-100 px-2 py-1 rounded">{{ $tokenCounts[$selected] ?? 0 }} tokens</span>
             <iframe src="{{ $previewUrl }}" class="w-full h-full border-0"></iframe>
         @else
             <div class="p-8">
