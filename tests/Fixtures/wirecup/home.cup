@@ -1,4 +1,4 @@
 n Home|home Dashboard|admin/dashboard
-h Welcome Home
-t This is a test fixture.
-b Continue|admin/dashboard
+hWelcome Home
+tThis is a test fixture.
+bContinue|admin/dashboard
